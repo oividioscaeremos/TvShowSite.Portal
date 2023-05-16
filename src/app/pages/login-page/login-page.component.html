@@ -1,0 +1,59 @@
+<app-loading #loading></app-loading>
+<body class="hold-transition dark-mode login-page sidebar-mini layout-top-nav">
+  <div class="w-100 h-100 row align-items-center justify-content-center">
+    <div class="login-box">
+      <div class="login-logo">
+        <a href="../../index2.html"><b>Admin</b>LTE</a>
+      </div>
+      <!-- /.login-logo -->
+      <div class="card">
+        <div class="card-body login-card-body">
+          <p class="login-box-msg">Sign in to start your session</p>
+
+          <form [formGroup]="loginFormGroup">
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" formControlName="username" placeholder="Username" />
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-user"></span>
+                </div>
+              </div>
+              <div class="w-100" *ngIf="!loginFormGroup.controls['username'].valid && loginFormGroup.controls['username'].touched && loginFormGroup.controls['username'].errors">
+                <ul>
+                    <li *ngIf="loginFormGroup.controls['username'].errors?.['required']">Please enter a password.</li>
+                </ul>
+              </div>
+            </div>
+            <div class="input-group mb-3">
+              <input type="password" class="form-control" formControlName="password" placeholder="Password" />
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-lock"></span>
+                </div>
+              </div>
+              <div class="w-100" *ngIf="!loginFormGroup.controls['password'].valid && loginFormGroup.controls['password'].touched && loginFormGroup.controls['password'].errors">
+                <ul>
+                    <li *ngIf="loginFormGroup.controls['password'].errors?.['required']">Please enter a password.</li>
+                </ul>
+              </div>
+            </div>
+            <div class="row justify-content-end">
+              <button type="button" class="btn btn-primary btn-block" (click)="login()">
+                Sign In
+              </button>
+              <!-- /.col -->
+            </div>
+          </form>
+
+          <p class="mb-0">
+            <a routerLink="/register" class="text-center"
+              >Register a new membership</a
+            >
+          </p>
+        </div>
+        <!-- /.login-card-body -->
+      </div>
+    </div>
+    <!-- /.login-box -->
+  </div>
+</body>

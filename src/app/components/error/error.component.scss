@@ -1,0 +1,18 @@
+.custom-error-message {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+
+    div {
+        width: inherit;
+        min-height: 10px;
+        
+        &:hover
+        {
+            display: block;
+            color: black;
+            min-height: 10px;
+            background-color: rgb(204, 204, 204);
+        }
+    }
+}
