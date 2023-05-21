@@ -7,7 +7,8 @@
                 class="form-control-lg w-75" 
                 id="search-box" 
                 placeholder="Search" 
-                [(ngModel)]="showSearchRequest.Name"/>
+                [(ngModel)]="showSearchRequest.Name"
+                (keypress)="keyPress($event)"/>
 
             <button class="btn btn-secondary form-control-lg ml-2" (click)="search()"><i class="fas fa-search"></i>Search</button>
         </div>
@@ -18,7 +19,14 @@
                     <h5 class="card-title">{{ show.ShowName }}</h5>
                 </div>
                 <div class="card-footer">
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                    <a href="javascript:void(0)" 
+                        (click)="show.IsAdded ? removeShow(show.Id) : addShow(show.Id, show.MovieDbId)" 
+                        class="btn btn-block" 
+                        [ngClass]="{ 
+                            'bg-warning': show.IsAdded, 
+                            'bg-success': !show.IsAdded }">
+                        {{ show.IsAdded ? 'Remove' : 'Add' }}
+                    </a>
                 </div>
             </div>
         </div>

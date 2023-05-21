@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ErrorComponent } from 'src/app/components/error/error.component';
 import { LoadingComponent } from 'src/app/components/loading/loading.component';
+import { AddShowRequest } from 'src/models/show-models/add-show.model';
+import { RemoveShowRequest } from 'src/models/show-models/remove-show.model';
 import { Page } from 'src/models/show-models/show-search-component-models';
 import { ShowSearchRequest, ShowSearchResponseEntity } from 'src/models/show-models/show-search-models';
 import { ShowService } from 'src/services/show.service';
@@ -69,10 +71,65 @@ export class SearchPageComponent implements OnInit {
     }
   }
 
+  public addShow(id: number, movieDbId: number)
+  {
+    this.loading.show();
+    this.showService.addShow(new AddShowRequest(id, movieDbId)).then(resp =>
+    {
+      if(resp.Status)
+      {
+        let show = this.listedShows.find(show => show.Id === id || show.MovieDbId === movieDbId) as ShowSearchResponseEntity;
+        
+        if(show)
+        {
+          show.IsAdded = true;
+        }
+      }
+      else
+      {
+        this.error.addAlerts(resp.ErrorList);
+      }
+    })
+    .catch(() => this.error.addAlert("Something unexcepted happened while adding the show."))
+    .finally(() => this.loading.hide());
+  }
+
+  public removeShow(id: number)
+  {
+    this.loading.show();
+    this.showService.removeShow(new RemoveShowRequest(id)).then(resp =>
+    {
+      if(resp.Status)
+      {
+        let show = this.listedShows.find(show => show.Id === id) as ShowSearchResponseEntity;
+
+        if(show)
+        {
+          show.IsAdded = false;
+        }
+      }
+      else
+      {
+        this.error.addAlerts(resp.ErrorList);
+      }
+    })
+    .catch(() => this.error.addAlert("Something unexcepted happened while removing the show."))
+    .finally(() => this.loading.hide());
+  }
+
   public goTo(event: PageEvent)
   {
     this.showSearchRequest.Page = event.pageIndex + 1;
     this.showSearchRequest.PageSize = event.pageSize;
     this.search(false);
+  }
+
+  public keyPress(e: KeyboardEvent)
+  {
+    console.log("keypress", e);
+    if(e.key === 'Enter')
+    {
+      this.search();
+    }
   }
 }

@@ -24,7 +24,7 @@ export class AccountService {
 
   public refresh(request: RefreshTokenRequest) : Promise<RefreshTokenResponse>
   {
-    return this.httpService.postWithApiUrl('account/refresh', request);
+    return this.httpService.postWithApiUrl('account/refresh_token', request);
   }
 
   public logout() : Promise<any>

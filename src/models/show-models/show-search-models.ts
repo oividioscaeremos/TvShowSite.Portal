@@ -15,6 +15,7 @@ export class ShowSearchResponseEntity
     PosterURL: string;
     EpisodeCount: number;
     SeasonCount: number;
+    IsAdded: boolean;
 }
 
 export class ShowSearchResponse extends BaseResponseWithEntity<Array<ShowSearchResponseEntity>>

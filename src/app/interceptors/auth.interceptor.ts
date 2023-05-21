@@ -7,6 +7,7 @@ import { BehaviorSubject, Observable, from, of, throwError } from 'rxjs';
 import { catchError, filter, switchMap, take } from 'rxjs/operators';
 import { AccountService } from 'src/services/account.service';
 import { RefreshTokenRequest } from 'src/models/authorization-models/refresh-token-models.model';
+import { Router } from '@angular/router';
 
 const TOKEN_HEADER_KEY = 'Authorization';  // for Spring Boot back-end
 
@@ -15,7 +16,7 @@ export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
   private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
-  constructor(private accountService: AccountService) { }
+  constructor(private accountService: AccountService, private router: Router) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<Object>> | Observable<HttpEvent<any>> {
     let authReq = req;
@@ -47,15 +48,21 @@ export class AuthInterceptor implements HttpInterceptor {
       this.refreshTokenSubject.next(null);
 
       const token = localStorage.getItem("refreshToken");
-
+      console.log("handle401 001", token);
       if (token)
       {
+        console.log("handle401 002");
+
         var refreshTokenRequest = new RefreshTokenRequest();
         refreshTokenRequest.RefreshToken = token;
+
+        console.log("handle401 003", refreshTokenRequest);
 
         return from(this.accountService.refresh(refreshTokenRequest)).pipe(
           switchMap(resp => 
           {
+              console.log("handle401 004", refreshTokenRequest);
+
               this.isRefreshing = false;
   
               if(resp.Status)
@@ -75,6 +82,8 @@ export class AuthInterceptor implements HttpInterceptor {
                 this.accountService.logout();
 
                 localStorage.clear();
+
+                window.location.reload();
                 
                 return throwError(() => {});
               }
@@ -85,9 +94,9 @@ export class AuthInterceptor implements HttpInterceptor {
 
             this.isRefreshing = false;
           
-            this.accountService.logout();
-
             localStorage.clear();
+
+            window.location.reload();
 
             return throwError(() => err);
           })

@@ -18,7 +18,6 @@ export class PreventUnauthorizedAccessGuard implements CanActivate {
   {
     if(localStorage.getItem("accessToken"))
     {
-      console.log("route", route.url)
       return true;
     }
 

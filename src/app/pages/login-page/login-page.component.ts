@@ -43,6 +43,8 @@ export class LoginPageComponent implements OnInit {
       this.loading.show();
       this.accountService.login(loginRequest).then(resp =>
       {
+        console.log("ilker loginResp", resp);
+        
         if(resp.Status)
         {
           localStorage.setItem("accessToken", resp.Value?.AccessToken ?? '');
@@ -61,6 +63,14 @@ export class LoginPageComponent implements OnInit {
       {
         this.loading.hide();
       });
+    }
+  }
+
+  public keyPress(e: KeyboardEvent)
+  {
+    if(e.key === "Enter")
+    {
+      this.login();
     }
   }
 }

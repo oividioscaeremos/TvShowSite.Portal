@@ -10,7 +10,7 @@
         <div class="card-body login-card-body">
           <p class="login-box-msg">Sign in to start your session</p>
 
-          <form [formGroup]="loginFormGroup">
+          <form [formGroup]="loginFormGroup" (keypress)="keyPress($event)">
             <div class="input-group mb-3">
               <input type="text" class="form-control" formControlName="username" placeholder="Username" />
               <div class="input-group-append">

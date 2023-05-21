@@ -1,0 +1,21 @@
+<app-loading #loading></app-loading>
+<app-error #error></app-error>
+<ng-container>
+    <div class="w-100 row p-0 m-0">
+        <div class="col-12 mt-5 p-3 row justify-content-start">
+            <div class="card m-2" style="width: 12rem; height: 20rem;" *ngFor="let show of nextToWatchShows">
+                <img class="card-img-top" style="height: 13rem; object-fit: cover;" src="{{show.PosterURL}}" alt="{{show.Name}} Poster">
+                <div class="card-body">
+                    <h5 class="card-title">{{ show.Name }}</h5>
+                </div>
+                <div class="card-footer text-white">
+                    <a href="javascript:void(0)" 
+                        class="btn btn-block btn-primary"
+                        (click)="markAsWatched(show.ShowId, show.EpisodeId)">
+                        Watched {{ show.SeasonNumber }} - {{ show.EpisodeNumber }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>

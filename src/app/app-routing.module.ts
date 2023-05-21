@@ -8,6 +8,7 @@ import { HomePageComponent } from './pages/home-page/home-page.component';
 import { ShowPageComponent } from './pages/home-page/show-page/show-page.component';
 import { PreventLoginGuard } from './guards/prevent-login.guard';
 import { SearchPageComponent } from './pages/home-page/search-page/search-page.component';
+import { NextToWatchPageComponent } from './pages/home-page/next-to-watch-page/next-to-watch-page.component';
 
 const routes: Routes = [
   { path: 'register', component: RegisterPageComponent, canActivate: [PreventLoginGuard] },
@@ -16,6 +17,10 @@ const routes: Routes = [
     path: '', component: HomePageComponent, 
     canActivate: [PreventUnauthorizedAccessGuard],
     children: [
+      {
+        path: '',
+        component: NextToWatchPageComponent
+      },
       { 
         path: 'show:id', 
         component: ShowPageComponent 

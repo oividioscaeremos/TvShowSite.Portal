@@ -12,11 +12,11 @@ export class HttpService {
 
   constructor(private httpClient: HttpClient) { }
 
-  public getWithApiUrl(path: string, queryParams: QueryParam[])
+  public getWithApiUrl<T>(path: string, queryParams: QueryParam[]) : Promise<T>
   {
     var httpParams = new HttpParams();
 
-    if(queryParams)
+    if(queryParams?.length > 0)
     {
       for (const queryParam of queryParams)
       {
@@ -24,7 +24,7 @@ export class HttpService {
       }
     }
 
-    return firstValueFrom(this.httpClient.get(environment.apiUrl + '/' + path, {
+    return firstValueFrom(this.httpClient.get<T>(environment.apiUrl + '/' + path, {
       params: httpParams
     }));
   }
@@ -36,6 +36,6 @@ export class HttpService {
 
   public deleteWithApiUrl(path: string) : Promise<any>
   {
-    return firstValueFrom(this.httpClient.delete(environment.apiUrl + '/' + path));
+    return firstValueFrom(this.httpClient.delete(environment.apiUrl + '/' + path)).catch(() => {});
   }
 }

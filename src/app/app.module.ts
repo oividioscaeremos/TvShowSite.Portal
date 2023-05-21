@@ -16,6 +16,7 @@ import { SearchPageComponent } from './pages/home-page/search-page/search-page.c
 import { ErrorComponent } from './components/error/error.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { NextToWatchPageComponent } from './pages/home-page/next-to-watch-page/next-to-watch-page.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     LoadingComponent,
     ShowPageComponent,
     SearchPageComponent,
-    ErrorComponent
+    ErrorComponent,
+    NextToWatchPageComponent
   ],
   imports: [
     AppRoutingModule,
