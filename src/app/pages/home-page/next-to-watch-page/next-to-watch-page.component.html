@@ -6,7 +6,11 @@
             <div class="card m-2" style="width: 12rem; height: 20rem;" *ngFor="let show of nextToWatchShows">
                 <img class="card-img-top" style="height: 13rem; object-fit: cover;" src="{{show.PosterURL}}" alt="{{show.Name}} Poster">
                 <div class="card-body">
-                    <h5 class="card-title">{{ show.Name }}</h5>
+                    <h5 class="card-title">
+                        <a [routerLink]="'/show/' + show.ShowId" class="link-opacity-100-hover">
+                            {{ show.Name }}
+                        </a>
+                    </h5>
                 </div>
                 <div class="card-footer text-white">
                     <a href="javascript:void(0)" 

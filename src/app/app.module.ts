@@ -17,6 +17,7 @@ import { ErrorComponent } from './components/error/error.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NextToWatchPageComponent } from './pages/home-page/next-to-watch-page/next-to-watch-page.component';
+import { APP_BASE_HREF } from '@angular/common';
 
 @NgModule({
   declarations: [

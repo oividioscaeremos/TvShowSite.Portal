@@ -12,17 +12,29 @@ export class HttpService {
 
   constructor(private httpClient: HttpClient) { }
 
-  public getWithApiUrl<T>(path: string, queryParams: QueryParam[]) : Promise<T>
+  public getWithApiUrl<T>(path: string, queryParams: any) : Promise<T>
   {
-    var httpParams = new HttpParams();
+    var httpParams = new HttpParams({
+      fromObject: queryParams
+    });
+    
+    // if(queryParams && Object.entries(queryParams).length > 0)
+    // {
+    //   console.log("here 001");
+    //   let keys = Object.keys(queryParams);
 
-    if(queryParams?.length > 0)
-    {
-      for (const queryParam of queryParams)
-      {
-        httpParams.set(queryParam.key, queryParam.value);
-      }
-    }
+    //   for (const key of keys)
+    //   {
+    //     console.log("here 002", key);
+
+    //     if(queryParams[key] !== null && queryParams[key] !== undefined)
+    //     {
+    //       console.log("here 003", queryParams[key]);
+
+    //       httpParams.append(key, queryParams[key]);
+    //     }
+    //   }
+    // }
 
     return firstValueFrom(this.httpClient.get<T>(environment.apiUrl + '/' + path, {
       params: httpParams

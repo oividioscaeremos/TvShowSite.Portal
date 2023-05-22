@@ -13,4 +13,9 @@ export class EpisodeService {
   {
     return this.httpService.postWithApiUrl('episode/mark_as_watched', request);
   }
+
+  public getShowNextToWatchEpisode(showId: number) : Promise<MarkAsWatchedResponse>
+  {
+    return this.httpService.getWithApiUrl('episode/get_show_next_to_watch', { showId: showId });
+  }
 }

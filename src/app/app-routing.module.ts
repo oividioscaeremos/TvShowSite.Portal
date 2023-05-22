@@ -22,7 +22,8 @@ const routes: Routes = [
         component: NextToWatchPageComponent
       },
       { 
-        path: 'show:id', 
+        pathMatch: "full",
+        path: 'show/:id', 
         component: ShowPageComponent 
       },
       { 
