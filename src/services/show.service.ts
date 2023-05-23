@@ -8,6 +8,7 @@ import { ShowNameResponse } from 'src/models/show-models/show-name.model';
 import { GetPosterURLResponse } from 'src/models/show-models/poster-url.model';
 import { FavoriteCharactersResponse } from 'src/models/show-models/favorite-characters.model';
 import { SeasonEpisodeResponse } from 'src/models/show-models/season-episode.model';
+import { UserShowStatusResponse } from 'src/models/show-models/user-show-status.model';
 
 @Injectable({
   providedIn: 'root'
@@ -54,5 +55,10 @@ export class ShowService {
   public getShowSeasonsEpisodes(showId: number) : Promise<SeasonEpisodeResponse>
   {
     return this.httpService.getWithApiUrl('show/get_seasons_episodes', { showId: showId });
+  }
+
+  public getUserShowStatus(showId: number) : Promise<UserShowStatusResponse>
+  {
+    return this.httpService.getWithApiUrl('show/get_user_show_status', { showId: showId });
   }
 }

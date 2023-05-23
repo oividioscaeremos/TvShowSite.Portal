@@ -2,9 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorComponent } from 'src/app/components/error/error.component';
 import { LoadingComponent } from 'src/app/components/loading/loading.component';
+import { AddShowRequest } from 'src/models/show-models/add-show.model';
 import { FavoriteCharactersResponseEntity } from 'src/models/show-models/favorite-characters.model';
 import { MarkAsNotWatchedRequest } from 'src/models/show-models/mark-as-not-watched.model';
 import { MarkAsWatchedRequest } from 'src/models/show-models/mark-as-watched.model';
+import { RemoveShowRequest } from 'src/models/show-models/remove-show.model';
 import { SeasonEpisodeEpisode, SeasonEpisodeResponse, SeasonEpisodeResponseEntity, SeasonEpisodeSeason } from 'src/models/show-models/season-episode.model';
 import { EpisodeService } from 'src/services/episode.service';
 import { ShowService } from 'src/services/show.service';
@@ -24,6 +26,7 @@ export class ShowPageComponent implements OnInit {
   showDescription: string = "";
 
   selectedSeasonId: number;
+  isShowAdded: boolean = false;
 
   seasonsEpisodes: SeasonEpisodeResponseEntity[] = [];
   seasons: SeasonEpisodeSeason[] = [];
@@ -47,6 +50,7 @@ export class ShowPageComponent implements OnInit {
           this.showId = parseInt(params.get("id") as string);
 
           this.getShowName();
+          this.getUserShowStatus();
           this.getShowPosterURL();
           this.getShowDescription();
           this.getFavoriteCharacters();
@@ -230,6 +234,24 @@ export class ShowPageComponent implements OnInit {
     .finally(() => this.loading.hide());
   }
 
+  private getUserShowStatus()
+  {
+    this.loading.show();
+    this.showService.getUserShowStatus(this.showId).then(resp =>
+    {
+      if(resp.Status)
+      {
+        this.isShowAdded = resp.Value;
+      }
+      else
+      {
+        this.error.addAlerts(resp.Status);
+      }
+    })
+    .catch(() => this.error.addAlert("Something unexpected happened while fetching user show status."))
+    .finally(() => this.loading.hide());
+  }
+
   public seasonSelectionChanged(event: any)
   {
     let selectedSeasonId = event.target.value;
@@ -320,6 +342,42 @@ export class ShowPageComponent implements OnInit {
       }
     })
     .catch(() => this.error.addAlert("Something unexpected happened while marking the episode as watched."))
+    .finally(() => this.loading.hide());
+  }
+
+  public addShow()
+  {
+    this.loading.show();
+    this.showService.addShow(new AddShowRequest(this.showId, -1)).then(resp =>
+    {
+      if(resp.Status)
+      {
+        this.isShowAdded = true;
+      }
+      else
+      {
+        this.error.addAlerts(resp.ErrorList);
+      }
+    })
+    .catch(() => this.error.addAlert("Something unexpected happened while adding the show."))
+    .finally(() => this.loading.hide());
+  }
+
+  public removeShow()
+  {
+    this.loading.show();
+    this.showService.removeShow(new RemoveShowRequest(this.showId)).then(resp =>
+    {
+      if(resp.Status)
+      {
+        this.isShowAdded = false;
+      }
+      else
+      {
+        this.error.addAlerts(resp.ErrorList);
+      }
+    })
+    .catch(() => this.error.addAlert("Something unexpected happened while adding the show."))
     .finally(() => this.loading.hide());
   }
 }
