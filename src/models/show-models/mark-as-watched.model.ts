@@ -15,6 +15,7 @@ export class MarkAsWatchedRequest
 export class MarkAsWatchedResponseEntity
 {
     EpisodeId: number;
+    SeasonId: number;
     SeasonNumber: number;
     EpisodeNumber: number;
     IsFinished: boolean;

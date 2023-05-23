@@ -18,6 +18,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NextToWatchPageComponent } from './pages/home-page/next-to-watch-page/next-to-watch-page.component';
 import { APP_BASE_HREF } from '@angular/common';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { APP_BASE_HREF } from '@angular/common';
     ReactiveFormsModule,
     RouterModule,
     BrowserAnimationsModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatTooltipModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
