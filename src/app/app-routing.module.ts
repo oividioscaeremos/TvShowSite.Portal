@@ -9,6 +9,7 @@ import { ShowPageComponent } from './pages/home-page/show-page/show-page.compone
 import { PreventLoginGuard } from './guards/prevent-login.guard';
 import { SearchPageComponent } from './pages/home-page/search-page/search-page.component';
 import { NextToWatchPageComponent } from './pages/home-page/next-to-watch-page/next-to-watch-page.component';
+import { EpisodeComponent } from './pages/home-page/episode/episode.component';
 
 const routes: Routes = [
   { path: 'register', component: RegisterPageComponent, canActivate: [PreventLoginGuard] },
@@ -25,6 +26,11 @@ const routes: Routes = [
         pathMatch: "full",
         path: 'show/:id', 
         component: ShowPageComponent 
+      },
+      { 
+        pathMatch: "full",
+        path: 'show/:showId/episode/:episodeId', 
+        component: EpisodeComponent 
       },
       { 
         path: 'search', 

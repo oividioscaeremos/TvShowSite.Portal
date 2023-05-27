@@ -12,3 +12,12 @@
         font-size: 14pt;
     }
 }
+
+.episodeText {
+    color: whitesmoke;
+
+    &:hover {
+        color: white !important;
+        text-decoration: underline;
+    }
+}

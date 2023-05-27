@@ -19,6 +19,11 @@
             <div id="showDescription">
                 <span>{{showDescription}}</span>
             </div>
+            <div class="w-100 pt-4">
+                <app-comment
+                    [showId]="showId"
+                ></app-comment>
+            </div>
         </div>
         <div class="col-12 col-md-3">
             <div id="favoriteCharactersContainer">
@@ -60,7 +65,7 @@
                         <tbody>
                           <tr *ngFor="let episode of episodes">
                             <td>{{episode.EpisodeNumber}}</td>
-                            <td>{{episode.EpisodeName}}</td>
+                            <td><a class="episodeText" routerLink="/show/{{showId}}/episode/{{episode.EpisodeId}}">{{episode.EpisodeName}}</a></td>
                             <td>
                                 <a href="javascript:void(0)" 
                                     (click)="episode.IsWatched ? markEpisodeAsNotWatched(episode.SeasonId, episode.EpisodeId) : markEpisodeAsWatched(episode.SeasonId, episode.EpisodeId)">

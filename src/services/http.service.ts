@@ -17,24 +17,6 @@ export class HttpService {
     var httpParams = new HttpParams({
       fromObject: queryParams
     });
-    
-    // if(queryParams && Object.entries(queryParams).length > 0)
-    // {
-    //   console.log("here 001");
-    //   let keys = Object.keys(queryParams);
-
-    //   for (const key of keys)
-    //   {
-    //     console.log("here 002", key);
-
-    //     if(queryParams[key] !== null && queryParams[key] !== undefined)
-    //     {
-    //       console.log("here 003", queryParams[key]);
-
-    //       httpParams.append(key, queryParams[key]);
-    //     }
-    //   }
-    // }
 
     return firstValueFrom(this.httpClient.get<T>(environment.apiUrl + '/' + path, {
       params: httpParams
@@ -46,8 +28,14 @@ export class HttpService {
     return firstValueFrom(this.httpClient.post<T>(environment.apiUrl + '/' + path, body)) ;
   }
 
-  public deleteWithApiUrl(path: string) : Promise<any>
+  public deleteWithApiUrl(path: string, queryParams: any) : Promise<any>
   {
-    return firstValueFrom(this.httpClient.delete(environment.apiUrl + '/' + path)).catch(() => {});
+    var httpParams = new HttpParams({
+      fromObject: queryParams
+    });
+
+    return firstValueFrom(this.httpClient.delete(environment.apiUrl + '/' + path, {
+      params: httpParams
+    })).catch(() => {});
   }
 }

@@ -19,6 +19,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { NextToWatchPageComponent } from './pages/home-page/next-to-watch-page/next-to-watch-page.component';
 import { APP_BASE_HREF } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { CommentComponent } from './components/comment/comment.component';
+import { SingleCommentComponent } from './components/comment/single-comment/single-comment.component';
+import { EpisodeComponent } from './pages/home-page/episode/episode.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +33,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ShowPageComponent,
     SearchPageComponent,
     ErrorComponent,
-    NextToWatchPageComponent
+    NextToWatchPageComponent,
+    CommentComponent,
+    SingleCommentComponent,
+    EpisodeComponent
   ],
   imports: [
     AppRoutingModule,

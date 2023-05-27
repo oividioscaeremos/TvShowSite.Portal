@@ -29,6 +29,6 @@ export class AccountService {
 
   public logout() : Promise<any>
   {
-    return this.httpService.deleteWithApiUrl('account/logout');
+    return this.httpService.deleteWithApiUrl('account/logout', {});
   }
 }

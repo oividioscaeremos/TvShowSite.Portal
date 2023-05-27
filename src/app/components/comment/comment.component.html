@@ -1,0 +1,23 @@
+<ng-container>
+    <app-loading #loading></app-loading>
+    <app-error #error></app-error>
+    <div class="card card-widget">
+        <div class="card-body">
+            <!-- post text -->
+            <img class="img-fluid img-circle img-sm" [src]="userProfilePictureUrl ?? '/assets/dummy-pp.jpeg'" alt="User profile picture">
+            <!-- .img-push is used to add margin to elements next to floating images -->
+            <div class="img-push row justify-content-end">
+                <textarea type="text" name="message" placeholder="Type Message ..." [(ngModel)]="commentText" class="form-control mb-3"></textarea>
+                <button type="submit" class="btn btn-success" (click)="addComment()">Add Comment</button>
+            </div>
+        </div>
+        <!-- /.card-body -->
+        <!-- /.card-footer -->
+    </div>
+    <app-single-comment 
+        *ngFor="let comment of comments"
+        [parent]="this"
+        [id]="comment.Id"
+        [comment]="comment"
+    ></app-single-comment>
+</ng-container>
