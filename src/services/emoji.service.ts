@@ -4,6 +4,7 @@ import { GetEmojisResponse } from 'src/models/emoji-models/get-emojis.model';
 import { AddReactionRequest, AddReactionResponse } from 'src/models/emoji-models/add-reaction.model';
 import { GetCommentReactionsResponse } from 'src/models/emoji-models/get-comment-reactions.model';
 import { GetEpisodeReactionsResponse } from 'src/models/emoji-models/get-episode-reactions.model';
+import { RemoveReactionRequest, RemoveReactionResponse } from 'src/models/emoji-models/remove-reaction.model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,5 +31,10 @@ export class EmojiService {
   public addReaction(request: AddReactionRequest) : Promise<AddReactionResponse>
   {
     return this.httpService.postWithApiUrl('emoji/add_reaction', request);
+  }
+
+  public removeReaction(request: RemoveReactionRequest) : Promise<RemoveReactionResponse>
+  {
+    return this.httpService.postWithApiUrl('emoji/remove_reaction', request);
   }
 }

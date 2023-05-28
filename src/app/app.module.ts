@@ -22,6 +22,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommentComponent } from './components/comment/comment.component';
 import { SingleCommentComponent } from './components/comment/single-comment/single-comment.component';
 import { EpisodeComponent } from './pages/home-page/episode/episode.component';
+import { AlertboxComponent } from './components/alertbox/alertbox.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { EpisodeComponent } from './pages/home-page/episode/episode.component';
     NextToWatchPageComponent,
     CommentComponent,
     SingleCommentComponent,
-    EpisodeComponent
+    EpisodeComponent,
+    AlertboxComponent
   ],
   imports: [
     AppRoutingModule,

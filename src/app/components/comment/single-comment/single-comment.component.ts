@@ -9,6 +9,8 @@ import { GetCommentsResponseEntity } from 'src/models/comment-models/get-comment
 import { CommentService } from 'src/services/comment.service';
 import { GetChildCommentsRequest } from 'src/models/comment-models/get-child-comments.model';
 import { AddCommentRequest } from 'src/models/comment-models/add-comment.model';
+import { AlertCloseType } from 'src/models/system-models/enums/alert-close-types.enum';
+import { AlertboxComponent } from '../../alertbox/alertbox.component';
 
 declare var $: any;
 
@@ -20,12 +22,20 @@ declare var $: any;
 export class SingleCommentComponent implements OnInit {
   @ViewChild('loading', { static: true }) loading : LoadingComponent;
   @ViewChild('error', { static: true }) error : ErrorComponent;
+  @ViewChild('alertBox', { static: true }) alertBox : AlertboxComponent;
 
   @Input() parent: CommentComponent;
   @Input() comment: GetCommentsResponseEntity;
+  @Input() disabled: boolean;
 
   commentReactions: GetCommentReactionsResponseEntity[] = [];
   childComments: GetCommentsResponseEntity[] = [];
+
+  alertBoxFlags = {
+    isConfirmingCommentDeletion: false
+  }
+
+  commentToDelete: GetCommentsResponseEntity;
 
   commentText: string = "";
 
@@ -64,6 +74,8 @@ export class SingleCommentComponent implements OnInit {
 
   private addReaction(emojiId: number)
   {
+    if(this.disabled) return;
+
     this.loading.show();
     this.emojiService.addReaction(new AddReactionRequest(emojiId, this.parent.episodeId, this.comment.Id)).then(resp =>
     {
@@ -98,8 +110,42 @@ export class SingleCommentComponent implements OnInit {
     .finally(() => this.loading.hide());
   }
 
+  private deleteComment()
+  {
+    if(this.disabled) return;
+
+    this.loading.show();
+    this.commentService.deleteComment(this.commentToDelete.Id).then(resp =>
+    {
+      if(resp.Status)
+      {
+        if(this.comment.Id === this.commentToDelete.Id)
+        {
+          this.parent.comments = this.parent.comments.filter(comment => comment.Id !== this.commentToDelete.Id);
+        }
+        else
+        {
+          this.childComments = this.childComments.filter(comment => comment.Id !== this.commentToDelete.Id)
+        }
+      }
+      else
+      {
+        this.error.addAlerts(resp.ErrorList);
+      }
+    })
+    .catch(() => this.error.addAlert("Something unexpected happened while deleting the comment."))
+    .finally(() =>
+    {
+      this.commentToDelete = new GetCommentsResponseEntity();
+
+      this.loading.hide();
+    });
+  }
+
   public showEmojiPopover()
   {
+    if(this.disabled) return;
+
     let content = this.parent.emojis.map(emoji => 
     {
       let fontColorClass;
@@ -131,6 +177,8 @@ export class SingleCommentComponent implements OnInit {
 
   public addComment()
   {
+    if(this.disabled) return;
+
     this.loading.show();
     this.commentService.addComment(new AddCommentRequest(this.commentText, this.parent.showId, this.parent.episodeId, this.comment.Id)).then(resp =>
     {
@@ -146,5 +194,30 @@ export class SingleCommentComponent implements OnInit {
     })
     .catch(() => this.error.addAlert("Something unexpected happened while adding a new comment."))
     .finally(() => this.loading.hide());
+  }
+
+  public deleteCommentButtonClicked(comment: GetCommentsResponseEntity)
+  {
+    if(this.disabled) return;
+
+    this.alertBoxFlags.isConfirmingCommentDeletion = true;
+    this.commentToDelete = comment;
+    
+    this.alertBox.addAlert("Your comment will be irreversibly deleted, do you confirm?", {
+      IsConfirmButtonVisible: true
+    });
+  }
+
+  public alertClosed(type: AlertCloseType)
+  {
+    if(type === AlertCloseType.Confirm)
+    {
+      if(this.alertBoxFlags.isConfirmingCommentDeletion)
+      {
+        this.deleteComment();
+      }
+    }
+
+    this.alertBoxFlags.isConfirmingCommentDeletion = false;
   }
 }

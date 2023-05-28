@@ -3,10 +3,11 @@ import { CommentService } from 'src/services/comment.service';
 import { ErrorComponent } from '../error/error.component';
 import { LoadingComponent } from '../loading/loading.component';
 import { GetCommentsRequest, GetCommentsResponseEntity } from 'src/models/comment-models/get-comment.model';
-import { ActivatedRoute } from '@angular/router';
 import { AddCommentRequest } from 'src/models/comment-models/add-comment.model';
 import { GetEmojisResponseEntity } from 'src/models/emoji-models/get-emojis.model';
 import { EmojiService } from 'src/services/emoji.service';
+import { AlertCloseType } from 'src/models/system-models/enums/alert-close-types.enum';
+import { AlertboxComponent } from '../alertbox/alertbox.component';
 
 @Component({
   selector: 'app-comment',
@@ -19,6 +20,7 @@ export class CommentComponent implements OnInit {
   
   @Input() showId: number;
   @Input() episodeId?: number;
+  @Input() disabled: boolean = false;
 
   userProfilePictureUrl: string | null;
   comments: GetCommentsResponseEntity[] = [];
@@ -81,6 +83,8 @@ export class CommentComponent implements OnInit {
 
   public addComment()
   {
+    if(this.disabled) return;
+    
     this.loading.show();
     this.commentService.addComment(new AddCommentRequest(this.commentText, this.showId, this.episodeId, undefined)).then(resp =>
     {

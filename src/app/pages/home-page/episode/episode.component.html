@@ -1,1 +1,143 @@
-<p>episode works!</p>
+<ng-container>
+    <app-loading #loading></app-loading>
+    <app-error #error></app-error>
+    <app-alertbox #alertBox (alertClosedEvent)="alertBoxClosed($event)"></app-alertbox>
+    <div class="w-100 row align-items-start justify-content-center p-0 m-0 100vh">
+        <div class="col-12 m-0 p-0">
+            <img [src]="posterURL" style="width: 100%; max-height: 20rem; object-fit: cover;"/>
+            <div 
+                style="position: absolute; left:0; top:0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);" 
+                class="d-flex flex-column align-items-center justify-content-center">
+                <span style="font-weight: bold; font-size: 18pt; letter-spacing: 3pt;">
+                    {{episodeName}}
+                </span>
+                <button class="btn mt-3" [ngClass]="{'btn-danger': isWatched, 'btn-success': !isWatched}" (click)="isWatched ? markEpisodeAsNotWatched() : markEpisodeAsWatched()">
+                    <i class="fa" [ngClass]="{'fa-minus': isWatched, 'fa-plus': !isWatched}"></i>
+                    {{ isWatched ? 'Mark as not watched' : 'Mark as watched' }}
+                </button>
+            </div>
+        </div>
+        <div class="col-12" id="showTheRestContainer" style="background-color: rgba(0,0,0, 0.5);" *ngIf="!showTheRest">
+            <p>Hey, we are now protecting you from any spoilers about this episode!<br/>
+            But if you simply don't care and want to see episode details, click the button below. <br/>
+            You've been warned, though.</p>
+            <button class="btn btn-info" (click)="initializeTheRest()">
+                <i class="fa-solid fa-bolt"></i> Give me them spoilers.
+            </button>
+        </div>
+        <div class="col-12 col-md-7 pt-4" *ngIf="showTheRest">
+            <div id="episodeDescription">
+                <span>{{episodeDescription}}</span>
+            </div>
+            <div class="w-100 pt-4">
+                <app-comment
+                    [showId]="showId"
+                    [episodeId]="episodeId"
+                    [disabled]="!isWatched"
+                ></app-comment>
+            </div>
+        </div>
+        <div class="col-12 col-md-3 pt-4" *ngIf="showTheRest">
+            <div id="episodeNotesContainer">
+                <div id="accordion">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h4 class="card-title w-100">
+                                <a class="d-block w-100" data-toggle="collapse" href="#collapseNotes" aria-expanded="true">
+                                    View Notes
+                                    <i class="fa-solid fa-eye float-right"></i>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseNotes" class="collapse" data-parent="#accordion">
+                            <div class="card-body">
+                                <div class="card card-primary">
+                                    <div class="card-header">
+                                        <h4 class="card-title w-100">
+                                            <a class="d-block w-100" data-toggle="collapse" href="#collapseOne" aria-expanded="false">
+                                                <span>Add new note</span>
+                                                <i class="fa-solid fa-plus float-right"></i>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseOne" class="collapse" data-parent="#collapseNotes">
+                                        <div class="card-body">
+                                            <textarea [disabled]="!isWatched" class="form-control" placeholder="Write new note..." [(ngModel)]="noteContent"></textarea>
+                                        </div>
+                                        <div class="card-footer">
+                                            <button class="btn btn-primary float-right" [ngClass]="{'disabled': !isWatched}" (click)="addNewNote()">
+                                                Save
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card card-primary" *ngFor="let note of episodeNotes">
+                                    <div class="card-header">
+                                        <h4 class="card-title w-100 row align-items-center justify-content-between">
+                                            <a class="col-8" data-toggle="collapse" href="#collapse{{note.Id}}" aria-expanded="true">
+                                                {{ note.Content.substring(0, 25) }}...
+                                            </a>
+                                            <div class="col-4 row align-items-center justify-content-end">
+                                                <button class="btn btn-sm btn-secondary" (click)="deleteNoteBtnClick(note)"><i class="fa-solid fa-trash"></i></button>
+                                                <button class="btn btn-sm btn-secondary ml-2" (click)="editNoteBtnClick(note)"><i class="fa-solid fa-pen-to-square"></i></button>
+                                            </div>
+                                        </h4>
+                                    </div>
+                                    <div id="collapse{{note.Id}}" class="collapse" data-parent="#collapseNotes">
+                                        <div class="card-body">
+                                            <p *ngIf="!noteToUpdate || noteToUpdate.Id !== note.Id">{{ note.Content }}</p>
+                                            <textarea class="form-control" *ngIf="noteToUpdate && noteToUpdate.Id === note.Id" [(ngModel)]="noteToUpdate.Content"></textarea>
+                                            <div class="row align-items-center justify-content-end pt-3" *ngIf="noteToUpdate && noteToUpdate.Id === note.Id">
+                                                <a class="text-light mr-3" href="javascript:void(0)" (click)="cancelEditNoteBtnClick()">Cancel</a>
+                                                <button class="btn btn-sm btn-secondary" (click)="editNote()">Save</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="episodeReactionContainer" class="row align-items-center justify-content-center pt-3" style="font-size: 24pt;">
+                <div class="col-4 d-flex flex-column align-items-center justify-content-center" *ngFor="let reaction of episodeReactions">
+                    <a 
+                        href="javascript:void(0)" 
+                        class="customLink" 
+                        [ngClass]="{
+                            'text-warning': reaction.IsUsersReaction,
+                            'disabled': !isWatched
+                        }"
+                        (click)="reaction.IsUsersReaction ? removeReaction(reaction.EmojiId) : addReaction(reaction.EmojiId)"
+                    >
+                        <i class="fa-solid {{reaction.EmojiClassName}}"></i>
+                    </a>
+                    <span style="font-size: 10pt; margin-top: 1rem;">{{reaction.EmojiName}}</span>
+                    <span>{{reaction.ReactionCount}}</span>
+                </div>
+            </div>
+            <div id="favoriteCharactersContainer">
+                <div class="card m-2" style="min-width: 8rem; height: 16rem;" *ngFor="let character of favoriteCharacters">
+                    <img class="card-img-top" style="height:10rem; object-fit: cover;" src="{{character.PosterURL}}" alt="{{character.CharacterName}} Poster">
+                    <div 
+                        style="position: absolute; left:0.5rem; bottom: 6rem; width: 100%; height: 2rem; background-color: rgba(0,0,0,0.5);" 
+                        class="row align-items-center justify-content-center">
+                        <span>{{character.CharacterName}}</span>
+                    </div>
+                    <div class="card-body p-0 row align-items-center justify-content-center {{character.IsUsersVote ? 'text-warning' : ''}}">
+                        <span>{{ character.VoteCount }}</span>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-block" [ngClass]="{
+                            'btn-danger': character.IsUsersVote, 
+                            'btn-success': !character.IsUsersVote,
+                            'disabled': !isWatched
+                        }" (click)="character.IsUsersVote ? removeVote(character.CharacterId) : addVote(character.CharacterId)">
+                            <i class="fa" [ngClass]="{'fa-minus': character.IsUsersVote, 'fa-plus': !character.IsUsersVote}"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>

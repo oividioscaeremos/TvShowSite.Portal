@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 import { ErrorComponent } from 'src/app/components/error/error.component';
 import { LoadingComponent } from 'src/app/components/loading/loading.component';
 import { AddShowRequest } from 'src/models/show-models/add-show.model';
@@ -25,6 +26,7 @@ export class SearchPageComponent implements OnInit {
   listedShows: ShowSearchResponseEntity[] = [];
 
   constructor(
+    private router: Router,
     private showService: ShowService
   ) { }
 
@@ -71,10 +73,10 @@ export class SearchPageComponent implements OnInit {
     }
   }
 
-  public addShow(id: number, movieDbId: number)
+  public addShow(id: number, movieDbId: number, callBackFn?: any)
   {
     this.loading.show();
-    this.showService.addShow(new AddShowRequest(id, movieDbId)).then(resp =>
+    this.showService.addShow(new AddShowRequest(id, movieDbId, callBackFn === undefined || callBackFn === null)).then(resp =>
     {
       if(resp.Status)
       {
@@ -83,6 +85,11 @@ export class SearchPageComponent implements OnInit {
         if(show)
         {
           show.IsAdded = true;
+        }
+
+        if(callBackFn)
+        {
+          callBackFn(resp.Value);
         }
       }
       else
@@ -130,6 +137,18 @@ export class SearchPageComponent implements OnInit {
     if(e.key === 'Enter')
     {
       this.search();
+    }
+  }
+
+  public navigateToShowPage(show: ShowSearchResponseEntity)
+  {
+    if(show.Id)
+    {
+      this.router.navigateByUrl('/show/' + show.Id);
+    }
+    else
+    {
+      this.addShow(show.Id, show.MovieDbId, (showId: number) => this.router.navigateByUrl('/show/' + showId));
     }
   }
 }

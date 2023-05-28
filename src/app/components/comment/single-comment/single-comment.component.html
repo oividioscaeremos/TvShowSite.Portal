@@ -1,5 +1,6 @@
 <app-loading #loading></app-loading>
 <app-error #error></app-error>
+<app-alertbox #alertBox (alertClosedEvent)="alertClosed($event)"></app-alertbox>
 
 <div class="card card-widget">
     <div class="card-header">
@@ -13,7 +14,7 @@
         <button type="button" class="btn btn-tool" data-card-widget="collapse">
           <i class="fas fa-minus"></i>
         </button>
-        <button type="button" *ngIf="comment.IsUsersComment" class="btn btn-tool" data-card-widget="remove">
+        <button type="button" *ngIf="comment.IsUsersComment" class="btn btn-tool" (click)="deleteCommentButtonClicked(comment)">
           <i class="fas fa-times"></i>
         </button>
       </div>
@@ -43,8 +44,11 @@
 
         <div class="comment-text">
           <span class="username">
-            {{ childComment.UserName }}
-            <span class="text-muted float-right">{{childComment.CommentDate | date:'dd.MM.yyyy HH:mm'}}</span>
+            <span>{{ childComment.UserName }}</span>
+            <span class="text-muted m-0 float-right row align-items-center justify-content-center">
+              <span>{{childComment.CommentDate | date:'dd.MM.yyyy HH:mm'}}</span>
+              <button [ngClass]="{'disabled': disabled}" type="button" class="btn btn-tool m-0 float-right" (click)="deleteCommentButtonClicked(childComment)"><i class="fas fa-times"></i></button>
+            </span>
           </span><!-- /.username -->
           {{ childComment.CommentText }}
         </div>
@@ -62,8 +66,8 @@
       <img class="img-fluid img-circle img-sm" [src]="parent.userProfilePictureUrl ?? '/assets/dummy-pp.jpeg'" alt="Alt Text">
       <!-- .img-push is used to add margin to elements next to floating images -->
       <div class="img-push d-flex flex-row align-items-center justify-content-end">
-        <input type="text" name="message" placeholder="Type Message ..." [(ngModel)]="commentText" class="form-control" />
-        <button type="submit" class="btn btn btn-success ml-1" (click)="addComment()">
+        <input [disabled]="disabled" type="text" name="message" placeholder="Type Message ..." [(ngModel)]="commentText" class="form-control" />
+        <button type="submit" class="btn btn btn-success ml-1" (click)="addComment()" [ngClass]="{'disabled': disabled}">
           <i class="fa-solid fa-paper-plane"></i>
         </button>
       </div>

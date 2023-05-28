@@ -348,7 +348,7 @@ export class ShowPageComponent implements OnInit {
   public addShow()
   {
     this.loading.show();
-    this.showService.addShow(new AddShowRequest(this.showId, -1)).then(resp =>
+    this.showService.addShow(new AddShowRequest(this.showId, -1, true)).then(resp =>
     {
       if(resp.Status)
       {

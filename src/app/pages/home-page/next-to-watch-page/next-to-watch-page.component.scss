@@ -1,0 +1,8 @@
+a.customLink {
+    color: whitesmoke;
+
+    &:hover {
+        color: white !important;
+        text-decoration: underline;
+    }
+}
