@@ -8,7 +8,8 @@
             <div 
                 style="position: absolute; left:0; top:0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);" 
                 class="d-flex flex-column align-items-center justify-content-center">
-                <span style="font-weight: bold; font-size: 18pt; letter-spacing: 3pt;">
+                <span><a class="customLink" style="font-size: 18pt; font-weight: normal; background-color: rgba(0,0,0, 0.6); padding: 5px; margin: 5px !important; border-radius: 12px 12px 0 0;" routerLink="/show/{{showId}}">{{showName}}</a></span>
+                <span style="font-weight: bold; font-size: 18pt; letter-spacing: 3pt; background-color: rgba(0,0,0,0.6); padding: 10px; border-radius: 12px;">
                     {{episodeName}}
                 </span>
                 <button class="btn mt-3" [ngClass]="{'btn-danger': isWatched, 'btn-success': !isWatched}" (click)="isWatched ? markEpisodeAsNotWatched() : markEpisodeAsWatched()">

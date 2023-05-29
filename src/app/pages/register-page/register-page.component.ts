@@ -60,7 +60,8 @@ export class RegisterPageComponent {
       .catch((err) =>
       {
         alert('Something went wrong while registering.');
-      });
+      })
+      .finally(() => this.loading.hide());
     }
     else if( this.loginFormGroup.controls.password !== this.loginFormGroup.controls.passwordAgain)
     {

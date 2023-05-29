@@ -51,6 +51,7 @@ export class EpisodeComponent implements OnInit {
   episodeReactions: GetEpisodeReactionsResponseEntity[] = [];
   favoriteCharacters: FavoriteCharactersResponseEntity[] = [];
   episodeNotes: GetEpisodeNotesResponseEntity[] = [];
+  showName: string = "";
 
   noteToDelete: GetEpisodeNotesResponseEntity | undefined;
   noteToUpdate: GetEpisodeNotesResponseEntity | undefined;
@@ -81,6 +82,7 @@ export class EpisodeComponent implements OnInit {
         this.episodeId = parseInt(episodeId);
 
         this.getShowPoster();
+        this.getShowName();
         this.getEpisodeName();
         this.getEpisodeWatchedStatus();
       }
@@ -570,6 +572,24 @@ export class EpisodeComponent implements OnInit {
       }
     })
     .catch(() => this.error.addAlert("Something unexpected happened while fetching favorite episode characters."))
+    .finally(() => this.loading.hide());
+  }
+
+  private getShowName()
+  {
+    this.loading.show();
+    this.showService.getShowName(this.showId).then(resp =>
+    {
+      if(resp.Status)
+      {
+        this.showName = resp.Value;
+      }
+      else
+      {
+        this.error.addAlerts(resp.ErrorList);
+      }
+    })
+    .catch(() => this.error.addAlert("Something unexpected happened while fetching show name."))
     .finally(() => this.loading.hide());
   }
 
