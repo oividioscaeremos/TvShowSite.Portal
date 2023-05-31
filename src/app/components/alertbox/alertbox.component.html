@@ -12,7 +12,7 @@
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="errorlist-modal">{{ title }}</h5>
+            <h5 class="modal-title" id="errorlist-modal">{{ confirmButtonVisible ? title : 'Message' }}</h5>
             <button
               type="button"
               class="close"
@@ -30,11 +30,11 @@
               </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" (click)="modalClose(alertCloseTypeEnum.Confirm)">
+            <button type="button" class="btn btn-primary" *ngIf="confirmButtonVisible" (click)="modalClose(alertCloseTypeEnum.Confirm)">
                 Confirm
             </button>
             <button type="button" class="btn btn-danger" (click)="modalClose(alertCloseTypeEnum.Reject)">
-                Cancel
+                {{confirmButtonVisible ? 'Cancel' : 'Close'}}
             </button>
           </div>
         </div>

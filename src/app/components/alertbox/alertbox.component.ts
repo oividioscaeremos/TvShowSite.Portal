@@ -9,7 +9,7 @@ declare var $: any;
   templateUrl: './alertbox.component.html',
   styleUrls: ['./alertbox.component.scss']
 })
-export class AlertboxComponent implements OnInit, AfterViewInit {
+export class AlertboxComponent implements AfterViewInit {
 
   @Output() alertClosedEvent: EventEmitter<AlertCloseType> = new EventEmitter();
 
@@ -19,18 +19,20 @@ export class AlertboxComponent implements OnInit, AfterViewInit {
 
   title: string = "Alert";
   confirmButtonVisible: boolean = false;
+
+  currentCloseType: AlertCloseType | undefined;
   
   constructor() { }
-
-  ngOnInit(): void {
-  }
 
   ngAfterViewInit(): void
   {
     $('#alertlist-modal').on('hidden.bs.modal', (e: any) => {
       e.preventDefault();
       
+      this.alertClosedEvent.emit(this.currentCloseType);
+
       this.messages = [];
+      this.currentCloseType = undefined;
     });
   }
 
@@ -51,7 +53,7 @@ export class AlertboxComponent implements OnInit, AfterViewInit {
 
   public modalClose(alertCloseType: AlertCloseType)
   {
-    this.alertClosedEvent.emit(alertCloseType);
+    this.currentCloseType = alertCloseType;
 
     $('#alertlist-modal').modal('hide');
   }

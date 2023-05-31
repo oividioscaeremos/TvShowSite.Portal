@@ -4,6 +4,7 @@ import { AddCommentRequest, AddCommentResponse } from 'src/models/comment-models
 import { DeleteCommentResponse } from 'src/models/comment-models/delete-comment.model';
 import { GetCommentsRequest, GetCommentsResponse } from 'src/models/comment-models/get-comment.model';
 import { GetChildCommentsRequest, GetChildCommentsResponse } from 'src/models/comment-models/get-child-comments.model';
+import { GetLatestCommentsResponse } from 'src/models/comment-models/get-latest-comment.model';
 
 @Injectable({
   providedIn: 'root'
@@ -31,5 +32,10 @@ export class CommentService {
   public getChildComments(request: GetChildCommentsRequest) : Promise<GetChildCommentsResponse>
   {
     return this.httpService.postWithApiUrl('comment/get_child_comments', request);
+  }
+
+  public getLatestComments(userId: number | null = null) : Promise<GetLatestCommentsResponse>
+  {
+    return this.httpService.getWithApiUrl('comment/get_latest_comments', { userId: userId });
   }
 }

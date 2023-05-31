@@ -4,12 +4,15 @@ import { AlertboxComponent } from 'src/app/components/alertbox/alertbox.componen
 import { ErrorComponent } from 'src/app/components/error/error.component';
 import { LoadingComponent } from 'src/app/components/loading/loading.component';
 import { ChangeMailAddressRequest } from 'src/models/authorization-models/change-mail.model';
+import { ChangePasswordRequest } from 'src/models/authorization-models/change-passsword.model';
 import { ChangeUserPictureRequest } from 'src/models/authorization-models/change-user-picture.model';
 import { GetUserProfileDetailRequest } from 'src/models/authorization-models/get-profile-detail.model';
+import { GetLatestCommentsResponseEntity } from 'src/models/comment-models/get-latest-comment.model';
 import { GetShowNotesShowEntity } from 'src/models/show-models/get-show-note.model';
 import { GetUserShowResponseEntity } from 'src/models/show-models/get-user-show.model';
 import { AlertCloseType } from 'src/models/system-models/enums/alert-close-types.enum';
 import { AccountService } from 'src/services/account.service';
+import { CommentService } from 'src/services/comment.service';
 import { ShowService } from 'src/services/show.service';
 
 declare var $: any;
@@ -34,6 +37,7 @@ export class ProfilePageComponent implements OnInit, AfterViewChecked {
   username: string = "";
   userShows: GetUserShowResponseEntity[] = [];
   userNotes: GetShowNotesShowEntity[] = []
+  userLatestComments: GetLatestCommentsResponseEntity[] = [];
 
   password: string = "";
   passwordAgain: string = "";
@@ -41,7 +45,8 @@ export class ProfilePageComponent implements OnInit, AfterViewChecked {
   alertBoxFlags = {
     isUpdatingCoverPicture: false,
     isUpdatingProfilePicture: false,
-    isUpdatingMailAddress: false
+    isUpdatingMailAddress: false,
+    isUpdatingPassword: false
   }
 
   currentFile: File | undefined;
@@ -49,6 +54,7 @@ export class ProfilePageComponent implements OnInit, AfterViewChecked {
   constructor(
     private route: ActivatedRoute,
     private accountService: AccountService,
+    private commentService: CommentService,
     private showService: ShowService
   ) { }
 
@@ -62,6 +68,7 @@ export class ProfilePageComponent implements OnInit, AfterViewChecked {
 
       this.getUserProfileDetail();
       this.getUserShows();
+      this.getUserLatestComments();
     });
   }
 
@@ -102,6 +109,22 @@ export class ProfilePageComponent implements OnInit, AfterViewChecked {
     }
   }
 
+  public updatePasswordBtnClick()
+  {
+    if(this.password && this.password === this.passwordAgain)
+    {
+      this.alertBoxFlags.isUpdatingPassword = true;
+
+      this.alertBox.addAlert("Your password will be updated, do you confirm?", {
+        IsConfirmButtonVisible: true
+      });
+    }
+    else
+    {
+      this.error.addAlert("Passwords do not match.");
+    }
+  }
+
   public alertBoxClosed(alertBoxClosedType: AlertCloseType)
   {
     if(alertBoxClosedType === AlertCloseType.Confirm)
@@ -118,11 +141,16 @@ export class ProfilePageComponent implements OnInit, AfterViewChecked {
       {
         this.changeMail();
       }
+      else if(this.alertBoxFlags.isUpdatingPassword)
+      {
+        this.updatePassword();
+      }
     }
 
     this.alertBoxFlags.isUpdatingCoverPicture = false;
     this.alertBoxFlags.isUpdatingProfilePicture = false;
     this.alertBoxFlags.isUpdatingMailAddress = false;
+    this.alertBoxFlags.isUpdatingPassword = false;
   }
 
   private getUserProfileDetail()
@@ -252,6 +280,47 @@ export class ProfilePageComponent implements OnInit, AfterViewChecked {
       }
     })
     .catch(() => this.error.addAlert("Something unexpected happened while fetching the user notes."))
+    .finally(() => this.loading.hide());
+  }
+
+  private getUserLatestComments()
+  {
+    this.loading.show();
+    this.commentService.getLatestComments(this.userId).then(resp =>
+    {
+      if(resp.Status)
+      {
+        this.userLatestComments = resp.Value;
+      }
+      else
+      {
+        this.error.addAlerts(resp.ErrorList);
+      }
+    })
+    .catch(() => this.error.addAlert("Something unexpected happened while fetching user comments."))
+    .finally(() => this.loading.hide());
+  }
+
+  private updatePassword()
+  {
+    this.loading.show();
+    this.accountService.changePassword(new ChangePasswordRequest(this.password)).then(resp =>
+    {
+      if(resp.Status)
+      {
+        this.password = "";
+        this.passwordAgain = "";
+
+        this.alertBox.addAlert("Password has been successfully updated", {
+          IsConfirmButtonVisible: false
+        });
+      }
+      else
+      {
+        this.error.addAlerts(resp.ErrorList);
+      }
+    })
+    .catch(() => this.error.addAlert("Something unexpected happened while fetching user comments."))
     .finally(() => this.loading.hide());
   }
 }
