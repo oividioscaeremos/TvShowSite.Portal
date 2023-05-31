@@ -10,6 +10,7 @@ import { PreventLoginGuard } from './guards/prevent-login.guard';
 import { SearchPageComponent } from './pages/home-page/search-page/search-page.component';
 import { NextToWatchPageComponent } from './pages/home-page/next-to-watch-page/next-to-watch-page.component';
 import { EpisodeComponent } from './pages/home-page/episode/episode.component';
+import { ProfilePageComponent } from './pages/home-page/profile-page/profile-page.component';
 
 const routes: Routes = [
   { path: 'register', component: RegisterPageComponent, canActivate: [PreventLoginGuard] },
@@ -35,7 +36,14 @@ const routes: Routes = [
       { 
         path: 'search', 
         component: SearchPageComponent 
-      }
+      },
+      { 
+        path: 'profile', 
+        children: [
+          { path: '', component: ProfilePageComponent },
+          { path: ':userId', component: ProfilePageComponent}
+        ]
+      },
     ]
   },
   { path: '**', redirectTo: '' }

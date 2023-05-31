@@ -6,7 +6,7 @@
     <div class="card-header">
       <div class="user-block">
         <img class="img-circle" [src]="comment.UserProfilePicture ?? '/assets/dummy-pp.jpeg'" alt="User Image">
-        <span class="username"><a href="#">{{ comment.UserName }}</a></span>
+        <span class="username"><a [routerLink]="'/profile/' + comment.UserId">{{ comment.UserName }}</a></span>
         <span class="description">{{ comment.CommentDate | date: 'dd.MM.yyyy HH:mm' }}</span>
       </div>
       <!-- /.user-block -->

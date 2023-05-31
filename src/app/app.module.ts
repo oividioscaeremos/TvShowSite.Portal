@@ -23,6 +23,7 @@ import { CommentComponent } from './components/comment/comment.component';
 import { SingleCommentComponent } from './components/comment/single-comment/single-comment.component';
 import { EpisodeComponent } from './pages/home-page/episode/episode.component';
 import { AlertboxComponent } from './components/alertbox/alertbox.component';
+import { ProfilePageComponent } from './pages/home-page/profile-page/profile-page.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { AlertboxComponent } from './components/alertbox/alertbox.component';
     CommentComponent,
     SingleCommentComponent,
     EpisodeComponent,
-    AlertboxComponent
+    AlertboxComponent,
+    ProfilePageComponent
   ],
   imports: [
     AppRoutingModule,

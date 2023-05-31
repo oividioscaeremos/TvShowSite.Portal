@@ -12,4 +12,10 @@ export class HomePageComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  public logout()
+  {
+    localStorage.clear();
+
+    location.reload();
+  }
 }

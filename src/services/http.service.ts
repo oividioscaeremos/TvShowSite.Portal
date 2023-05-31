@@ -4,6 +4,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { QueryParam } from 'src/models/authorization-models/query-param';
 import { firstValueFrom, from, of } from 'rxjs';
+import { UploadFileResponse } from 'src/models/authorization-models/upload-file.model';
 
 @Injectable({
   providedIn: 'root'
@@ -37,5 +38,13 @@ export class HttpService {
     return firstValueFrom(this.httpClient.delete(environment.apiUrl + '/' + path, {
       params: httpParams
     })).catch(() => {});
+  }
+
+  public uploadFile(path: string, file: File) : Promise<UploadFileResponse>
+  {
+    var formParams = new FormData();
+    formParams.append("formFile", file);
+
+    return firstValueFrom(this.httpClient.post<UploadFileResponse>(environment.apiUrl + '/' + path, formParams));
   }
 }
